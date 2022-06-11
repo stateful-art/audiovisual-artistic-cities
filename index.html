@@ -6,6 +6,7 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+<script src="./main.js" type="" ></script>
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -35,19 +36,19 @@ body { margin: 0; padding: 0; }
 
     map.on('load', () => {
         const bins = 16;
-        const maxHeight = 200;
+        const maxHeight = 10;
         const binWidth = maxHeight / bins;
 
         // Divide the buildings into 16 bins based on their true height, using a layer filter.
         for (let i = 0; i < bins; i++) {
             map.addLayer({
-                'id': `3d-buildings-${i}`,
+                'id': `3d-buildings-${i+10}`,
                 'source': 'composite',
                 'source-layer': 'building',
                 'filter': [
                     'all',
                     ['==', 'extrude', 'true'],
-                    ['>', 'height', i * binWidth],
+                    ['>', 'height', (i * binWidth)],
                     ['<=', 'height', (i + 1) * binWidth]
                 ],
                 'type': 'fill-extrusion',
@@ -107,7 +108,15 @@ body { margin: 0; padding: 0; }
                 analyser.maxDecibels = -10;
                 analyser.smoothingTimeConstant = 0.85;
 
+                // TRY track, instead of microphone.
+                // const track = new audioCtx.MediaStreamTrack();
+
+                // const mediaStream = new audioCtx.MediaStream();
+                // mediaStream.addTrack(track);
+
+                // const source = audioCtx.createMediaStreamTrackSource(track);
                 const source = audioCtx.createMediaStreamSource(stream);
+
                 source.connect(analyser);
 
                 analyser.fftSize = bins * 2;
